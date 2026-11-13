@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RISE FC ADMIN</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080808;color:white;font-family:Arial,sans-serif}
+header{height:75px;padding:0 6%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #292929}
+.logo{font-size:25px;font-weight:900}
+.logo span{color:#c9a646}
+button{cursor:pointer;border:0;padding:12px 18px;border-radius:5px;font-weight:bold}
+.logout{background:#333;color:white}
+main{max-width:1100px;margin:65px auto;padding:20px}
+.subtitle{color:#c9a646;letter-spacing:3px;font-size:12px}
+h1{font-size:40px;margin:15px 0}
+.desc{color:#999;margin-bottom:40px}
+.dashboard{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.card{background:#151515;border:1px solid #292929;padding:32px;border-radius:12px;text-decoration:none;color:white;transition:.25s;display:block}
+.card:hover{border-color:#c9a646;transform:translateY(-5px);background:#1d1d1d}
+.card .icon{font-size:30px;color:#c9a646;margin-bottom:20px}
+.card h2{font-size:19px;margin-bottom:12px}
+.card p{font-size:14px;color:#999;line-height:1.6}
+.card span{display:inline-block;margin-top:22px;color:#c9a646;font-size:12px;font-weight:bold}
+#admin-email{color:#999;margin-bottom:25px}
+footer{text-align:center;color:#555;font-size:12px;padding:50px 20px}
+@media(max-width:600px){
+.dashboard{grid-template-columns:1fr}
+h1{font-size:30px}
+.card{padding:25px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">RISE<span>FC</span> ADMIN</div>
+  <button class="logout" id="logout">로그아웃</button>
+</header>
+
+<main>
+
+  <p class="subtitle">GEOMDAN RISE FC</p>
+  <h1>ADMIN DASHBOARD</h1>
+  <p class="desc">구단 운영 및 홈페이지 관리 시스템</p>
+
+  <p id="admin-email">관리자 확인 중...</p>
+
+  <section class="dashboard">
+
+<!-- NOTICE MANAGEMENT -->
+
+<a href="index.html#notices" class="card">
+  <div class="icon">📢</div>
+  <h2>NOTICE MANAGEMENT</h2>
+  <p>공식 공지사항 작성 및 홈페이지 공지 관리</p>
+  <span>공지사항 관리 바로가기 ↗</span>
+</a>
+
+
+<!-- PHOTO GALLERY MANAGEMENT -->
+
+<a href="index.html#gallery" class="card">
+  <div class="icon">📸</div>
+  <h2>PHOTO GALLERY</h2>
+  <p>구단 공식 사진 업로드 및 사진 갤러리 관리</p>
+  <span>사진 갤러리 관리 바로가기 ↗</span>
+</a>
+
+    <a href="players.html" class="card">
+      <div class="icon">⚽</div>
+      <h2>PLAYER MANAGEMENT</h2>
+      <p>선수 등록, 수정, 삭제 및 선수단 사진 관리</p>
+      <span>선수 관리 바로가기 ↗</span>
+    </a>
+
+    <a href="match-admin.html" class="card">
+      <div class="icon">📅</div>
+      <h2>MATCH MANAGEMENT</h2>
+      <p>경기 일정, 참석 선수, AI 포메이션 및 경기 결과 관리</p>
+      <span>경기 관리 바로가기 ↗</span>
+    </a>
+
+    <a href="#" class="card" onclick="comingSoon(event,'회원 관리')">
+      <div class="icon">👥</div>
+      <h2>MEMBER MANAGEMENT</h2>
+      <p>가입 회원 및 구단 멤버 관리</p>
+      <span>회원 관리 바로가기 ↗</span>
+    </a>
+
+    <a href="#" class="card" onclick="comingSoon(event,'구단 설정')">
+      <div class="icon">⚙️</div>
+      <h2>CLUB SETTINGS</h2>
+      <p>구단 정보 및 홈페이지 설정 관리</p>
+      <span>구단 설정 바로가기 ↗</span>
+    </a>
+
+  </section>
+
+</main>
+
+<footer>GEOMDAN RISE FC · ADMINISTRATION SYSTEM</footer>
+
+<script>
+const SUPABASE_URL =
+"https://gqsecxgzegyzzwlmfavr.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_8BKTlYkIEEwNS-dDauIfFg_3FSdkcDJ";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+async function checkAdmin(){
+
+  const {data,error} = await supabaseClient.auth.getUser();
+
+  if(error || !data.user){
+    location.replace("index.html");
+    return;
+  }
+
+  const {data:admin,error:adminError} = await supabaseClient
+    .from("rise_fc_admins")
+    .select("user_id")
+    .eq("user_id",data.user.id)
+    .maybeSingle();
+
+  if(adminError){
+    alert("관리자 확인 오류: " + adminError.message);
+    return;
+  }
+
+  if(!admin){
+    alert("관리자 권한이 없습니다.");
+    location.replace("index.html");
+    return;
+  }
+
+  document.getElementById("admin-email").textContent =
+    data.user.email + " 관리자님 환영합니다.";
+}
+
+function comingSoon(event,name){
+  event.preventDefault();
+  alert(name + " 기능은 현재 준비 중입니다.");
+}
+
+document.getElementById("logout").addEventListener("click",async()=>{
+
+  const {error} = await supabaseClient.auth.signOut();
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  location.replace("index.html");
+});
+
+checkAdmin();
+</script>
+
+</body>
+</html>

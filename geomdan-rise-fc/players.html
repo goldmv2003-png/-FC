@@ -1,0 +1,538 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RISE FC PLAYER MANAGEMENT</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:#080808;color:#fff;
+  font-family:Arial,'Malgun Gothic',sans-serif;
+  padding:30px;
+}
+.container{max-width:1100px;margin:auto}
+header{
+  display:flex;justify-content:space-between;
+  align-items:center;margin-bottom:35px;
+  border-bottom:1px solid #333;padding-bottom:20px;
+}
+h1{font-size:27px;color:#c9a646}
+h2{margin-bottom:20px}
+button{
+  cursor:pointer;border:0;padding:12px 18px;
+  font-weight:bold;border-radius:5px;
+}
+button:disabled{opacity:.5;cursor:not-allowed}
+.gold{background:#c9a646;color:#000}
+.gray{background:#333;color:white}
+.red{background:#a52a2a;color:white}
+.form-box,.list-box{
+  background:#151515;border:1px solid #333;
+  padding:25px;border-radius:10px;margin-bottom:25px;
+}
+input,select,textarea{
+  width:100%;padding:13px;margin:8px 0 18px;
+  background:#222;color:white;border:1px solid #444;
+  border-radius:5px;font-size:15px;
+}
+label{font-size:14px;color:#c9a646;font-weight:bold}
+textarea{height:100px;resize:vertical}
+.photo-area{
+  border:1px dashed #777;padding:20px;
+  text-align:center;border-radius:8px;margin:10px 0 20px;
+}
+#preview{
+  width:120px;aspect-ratio:4 / 6;height:auto;
+  object-fit:cover;object-position:center top;
+  display:none;margin:15px auto;border-radius:8px;
+}
+.player-list{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:15px;
+}
+.player{
+  background:#222;border:1px solid #444;
+  padding:15px;border-radius:8px;
+}
+.player img{
+  display:block;width:100%;aspect-ratio:4 / 6;
+  height:auto;object-fit:cover;object-position:center top;
+  background:#111;border-radius:8px;margin-bottom:12px;
+}
+.player h3{margin-bottom:7px}
+.player p{color:#aaa;font-size:13px;margin-bottom:12px}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.actions button{flex:1;padding:9px 5px;min-width:55px}
+.captain-badge{
+  display:inline-block;
+  background:#c9a646;color:#080808;
+  font-size:12px;font-weight:900;
+  padding:3px 7px;border-radius:4px;
+  margin-left:7px;vertical-align:middle;
+}
+#message{margin:15px 0;color:#c9a646;white-space:pre-wrap}
+.back{color:#c9a646;text-decoration:none}
+@media(max-width:600px){
+  body{padding:15px}
+  header{align-items:flex-start;gap:15px}
+  h1{font-size:20px}
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+  <div>
+    <h1>RISE FC</h1>
+    <p style="color:#aaa;margin-top:7px">PLAYER MANAGEMENT</p>
+  </div>
+  <a href="admin.html" class="back">← DASHBOARD</a>
+</header>
+
+<div class="form-box">
+  <h2 id="form-title">선수 신규 등록</h2>
+
+  <form id="player-form">
+
+    <label>등번호</label>
+    <input type="number" id="number" required placeholder="예: 10">
+
+    <label>선수 이름</label>
+    <input type="text" id="name" required placeholder="선수 이름">
+
+    <label>포지션</label>
+    <select id="position" required>
+      <option value="">포지션 선택</option>
+      <option value="GK">GK</option>
+      <option value="DF">DF</option>
+      <option value="MF">MF</option>
+      <option value="FW">FW</option>
+    </select>
+
+    <label>선수 소개</label>
+    <textarea id="description" placeholder="선수 소개를 입력하세요"></textarea>
+
+    <label>선수 사진 업로드</label>
+
+    <div class="photo-area">
+      <p>컴퓨터에서 선수 사진을 선택하세요.</p>
+      <input type="file" id="photo-file"
+        accept="image/jpeg,image/png,image/webp">
+      <img id="preview" alt="사진 미리보기">
+      <p style="color:#888;font-size:12px">
+        JPG / PNG / WEBP 이미지 지원
+      </p>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="gold" id="save-btn">
+        선수 등록
+      </button>
+      <button type="button" class="gray" id="cancel-btn" style="display:none">
+        수정 취소
+      </button>
+    </div>
+
+    <div id="message"></div>
+  </form>
+</div>
+
+<div class="list-box">
+  <h2>등록된 선수 목록</h2>
+  <div id="player-list" class="player-list">
+    불러오는 중...
+  </div>
+</div>
+
+</div>
+
+<script>
+const SUPABASE_URL = "https://gqsecxgzegyzzwlmfavr.supabase.co";
+const SUPABASE_KEY = "sb_publishable_8BKTlYkIEEwNS-dDauIfFg_3FSdkcDJ";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const BUCKET = "rise-fc-players";
+
+let currentUser = null;
+let editingId = null;
+let currentPhotoUrl = "";
+
+const form = document.getElementById("player-form");
+const photoFile = document.getElementById("photo-file");
+const preview = document.getElementById("preview");
+const message = document.getElementById("message");
+const playerList = document.getElementById("player-list");
+
+function safe(value){
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  })[c]);
+}
+
+// 관리자 확인
+async function checkAdmin(){
+  const {data,error} = await db.auth.getUser();
+
+  if(error || !data.user){
+    alert("관리자 로그인이 필요합니다.");
+    location.href = "admin.html";
+    return false;
+  }
+
+  currentUser = data.user;
+
+  const {data:admin,error:adminError} = await db
+    .from("rise_fc_admins")
+    .select("user_id")
+    .eq("user_id",currentUser.id)
+    .maybeSingle();
+
+  if(adminError || !admin){
+    alert("관리자 권한이 없습니다.");
+    location.href = "index.html";
+    return false;
+  }
+
+  return true;
+}
+
+// 사진 미리보기
+photoFile.addEventListener("change",()=>{
+  const file = photoFile.files[0];
+
+  if(!file){
+    preview.style.display = "none";
+    return;
+  }
+
+  if(!file.type.startsWith("image/")){
+    alert("이미지 파일만 업로드할 수 있습니다.");
+    photoFile.value = "";
+    return;
+  }
+
+  if(file.size > 5 * 1024 * 1024){
+    alert("사진은 5MB 이하로 선택해 주세요.");
+    photoFile.value = "";
+    return;
+  }
+
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
+});
+
+// 사진 업로드
+async function uploadPhoto(file){
+  const extension = file.name.split(".").pop().toLowerCase();
+
+  const safeName = file.name
+    .replace(/\.[^/.]+$/, "")
+    .replace(/[^a-zA-Z0-9가-힣_-]/g,"_");
+
+  const path =
+    currentUser.id + "/" +
+    Date.now() + "_" + safeName + "." + extension;
+
+  const {error} = await db.storage
+    .from(BUCKET)
+    .upload(path,file,{
+      cacheControl:"3600",
+      upsert:false
+    });
+
+  if(error) throw error;
+
+  const {data} = db.storage
+    .from(BUCKET)
+    .getPublicUrl(path);
+
+  return data.publicUrl;
+}
+
+// ========================================
+// 주장 관리
+// ========================================
+async function toggleCaptain(id,isCaptain){
+
+  try{
+
+    // 선수 정보 확인
+    const {data:player,error:playerError} = await db
+      .from("players")
+      .select("name")
+      .eq("id",id)
+      .single();
+
+    if(playerError) throw playerError;
+
+    const action = isCaptain
+      ? "주장을 해제"
+      : "새로운 주장으로 지정";
+
+    if(!confirm(`${player.name} 선수를 ${action}하시겠습니까?`)){
+      return;
+    }
+
+    // 기존 주장 해제 또는 현재 주장 해제
+    const {error:resetError} = await db
+      .from("players")
+      .update({is_captain:false})
+      .eq("is_captain",true);
+
+    if(resetError) throw resetError;
+
+    // 새 주장 지정
+    if(!isCaptain){
+
+      const {error:captainError} = await db
+        .from("players")
+        .update({is_captain:true})
+        .eq("id",id);
+
+      if(captainError) throw captainError;
+
+    }
+
+    alert(
+      isCaptain
+      ? "주장 지정이 해제되었습니다."
+      : `${player.name} 선수가 새로운 주장으로 지정되었습니다.`
+    );
+
+    await loadPlayers();
+
+  }catch(error){
+
+    console.error("주장 변경 오류:",error);
+
+    alert("주장 변경 실패:\n" + error.message);
+
+  }
+}
+
+// 선수 등록 및 수정
+form.addEventListener("submit",async(e)=>{
+  e.preventDefault();
+
+  const saveBtn = document.getElementById("save-btn");
+  saveBtn.disabled = true;
+  message.textContent = "저장 중입니다...";
+
+  try{
+    const file = photoFile.files[0];
+
+    let photoUrl = currentPhotoUrl;
+
+    if(file){
+      photoUrl = await uploadPhoto(file);
+    }
+
+    const player = {
+      number:Number(document.getElementById("number").value),
+      name:document.getElementById("name").value.trim(),
+      position:document.getElementById("position").value,
+      description:document.getElementById("description").value.trim(),
+      photo_url:photoUrl
+    };
+
+    if(editingId){
+      const {error} = await db
+        .from("players")
+        .update(player)
+        .eq("id",editingId);
+
+      if(error) throw error;
+
+      message.textContent = "선수 정보가 수정되었습니다.";
+
+    }else{
+      const {error} = await db
+        .from("players")
+        .insert(player);
+
+      if(error) throw error;
+
+      message.textContent = "선수가 등록되었습니다.";
+    }
+
+    resetForm();
+    await loadPlayers();
+
+  }catch(error){
+    console.error(error);
+    message.textContent = "저장 실패: " + error.message;
+
+  }finally{
+    saveBtn.disabled = false;
+  }
+});
+
+// 선수 목록
+async function loadPlayers(){
+
+  const {data,error} = await db
+    .from("players")
+    .select("*")
+    .order("number",{ascending:true});
+
+  if(error){
+    playerList.textContent = "목록 조회 실패: " + error.message;
+    return;
+  }
+
+  if(!data || data.length === 0){
+    playerList.textContent = "등록된 선수가 없습니다.";
+    return;
+  }
+
+  playerList.innerHTML = data.map(p=>`
+    <div class="player">
+
+      ${
+        p.photo_url
+        ? `<img src="${safe(p.photo_url)}" alt="${safe(p.name)}">`
+        : `<div style="height:180px;display:grid;place-items:center;color:#c9a646">RISE FC</div>`
+      }
+
+      <h3>
+        ${safe(p.number)}번 ${safe(p.name)}
+        ${
+          p.is_captain
+          ? '<span class="captain-badge">C · CAPTAIN</span>'
+          : ''
+        }
+      </h3>
+
+      <p>${safe(p.position)}</p>
+
+      <div class="actions">
+        <button class="gold"
+          onclick="editPlayer('${safe(p.id)}')">
+          수정
+        </button>
+
+        <button class="${p.is_captain ? 'gray' : 'gold'}"
+          onclick="toggleCaptain('${safe(p.id)}',${p.is_captain === true})">
+          ${p.is_captain ? '주장 해제' : '주장 지정'}
+        </button>
+
+        <button class="red"
+          onclick="deletePlayer('${safe(p.id)}')">
+          삭제
+        </button>
+      </div>
+
+    </div>
+  `).join("");
+}
+
+// 선수 수정
+async function editPlayer(id){
+
+  const {data,error} = await db
+    .from("players")
+    .select("*")
+    .eq("id",id)
+    .single();
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  editingId = data.id;
+  currentPhotoUrl = data.photo_url || "";
+
+  document.getElementById("number").value = data.number;
+  document.getElementById("name").value = data.name;
+  document.getElementById("position").value = data.position;
+  document.getElementById("description").value = data.description || "";
+
+  if(currentPhotoUrl){
+    preview.src = currentPhotoUrl;
+    preview.style.display = "block";
+  }else{
+    preview.style.display = "none";
+  }
+
+  photoFile.value = "";
+
+  document.getElementById("form-title").textContent = "선수 정보 수정";
+  document.getElementById("save-btn").textContent = "수정 완료";
+  document.getElementById("cancel-btn").style.display = "block";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+// 선수 삭제
+async function deletePlayer(id){
+
+  if(!confirm("정말 이 선수를 삭제하시겠습니까?")) return;
+
+  const {error} = await db
+    .from("players")
+    .delete()
+    .eq("id",id);
+
+  if(error){
+    alert("삭제 실패: " + error.message);
+    return;
+  }
+
+  alert("선수가 삭제되었습니다.");
+
+  if(editingId === id) resetForm();
+
+  await loadPlayers();
+}
+
+// 폼 초기화
+function resetForm(){
+
+  form.reset();
+  editingId = null;
+  currentPhotoUrl = "";
+
+  preview.src = "";
+  preview.style.display = "none";
+
+  document.getElementById("form-title").textContent = "선수 신규 등록";
+  document.getElementById("save-btn").textContent = "선수 등록";
+  document.getElementById("cancel-btn").style.display = "none";
+
+  message.textContent = "";
+}
+
+document.getElementById("cancel-btn")
+  .addEventListener("click",resetForm);
+
+// 시작
+(async()=>{
+
+  const allowed = await checkAdmin();
+
+  if(allowed){
+    await loadPlayers();
+  }
+
+})();
+</script>
+
+</body>
+</html>

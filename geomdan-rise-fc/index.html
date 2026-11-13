@@ -1,0 +1,628 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="검단 라이즈FC 공식 홈페이지">
+  <title>GEOMDAN RISE FC</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* 공식 SNS */
+    .contact-socials {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 35px;
+    }
+
+    .contact-socials a,
+    .footer-socials a {
+      color: inherit;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .contact-socials a {
+      padding: 12px 22px;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+    }
+
+    .contact-socials a:hover,
+    .footer-socials a:hover {
+      opacity: 0.65;
+    }
+
+    .footer-socials {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 25px;
+      margin-top: 20px;
+    }
+
+    .contact-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .phone-btn {
+      display: inline-block;
+      padding: 15px 25px;
+      border: 1px solid rgba(255,255,255,0.5);
+      color: white;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .phone-btn:hover {
+      background: white;
+      color: black;
+    }
+
+    /* 모바일 하단 문의 버튼 */
+    .mobile-contact-bar {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-contact-bar {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 9999;
+        gap: 0;
+        background: #111;
+        border-top: 1px solid rgba(255,255,255,0.15);
+      }
+
+      .mobile-contact-bar a {
+        flex: 1;
+        text-align: center;
+        padding: 16px 8px;
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .mobile-contact-bar .kakao-mobile {
+        background: #FEE500;
+        color: #191919;
+      }
+
+      body {
+        padding-bottom: 52px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- RISE FC INTRO -->
+<div id="intro-screen">
+
+    <video
+        id="intro-video"
+        autoplay
+        playsinline
+        preload="auto"
+    >
+        <source src="videos/intro.mp4" type="video/mp4">
+    </video>
+
+    <button id="skip-intro">SKIP INTRO ↗</button>
+
+</div>
+
+<!-- MAIN WEBSITE -->
+<div id="main-website">
+
+  <!-- HEADER -->
+  <header class="header">
+
+    <a href="#" class="logo">
+      <img src="images/라이즈FC 엠블럼.png" alt="라이즈FC 엠블럼">
+      RISE<span>FC</span>
+    </a>
+
+    
+<nav>
+  <a href="#about">구단소개</a>
+  <a href="#squad">선수단</a>
+  <a href="#matches">경기일정</a>
+  <a href="#notices">공지사항</a>
+  <a href="#gallery">사진</a>
+</nav>
+
+    <div class="header-actions">
+      <button class="login-btn" id="login-open">로그인</button>
+      <button class="signup-btn" id="signup-open">회원가입</button>
+      <a href="#contact" class="join-btn">선수 모집 ↗</a>
+    </div>
+
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+
+      <div class="hero-bg">
+        <img
+          src="images/라이즈FC 야간 경기.png"
+          alt="라이즈FC 야간 경기"
+        >
+      </div>
+
+      <div class="hero-content">
+
+        <p class="eyebrow">GEOMDAN FOOTBALL CLUB</p>
+
+        <h1>
+          RISE<br>
+          <span>TOGETHER.</span>
+        </h1>
+
+        <p class="hero-desc">
+          하나의 팀, 하나의 목표.<br>
+          우리는 함께 성장하고 함께 승리한다.
+        </p>
+
+        <a href="#about" class="main-btn">
+          DISCOVER OUR CLUB ↗
+        </a>
+
+      </div>
+
+      <div class="hero-number">01</div>
+      <div class="hero-label">EST. GEOMDAN · KOREA</div>
+
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about section" id="about">
+
+      <p class="section-label">01 / ABOUT US</p>
+
+      <div class="about-content">
+
+        <div class="about-text">
+
+          <h2>
+            MORE THAN<br>
+            JUST FOOTBALL.
+          </h2>
+
+          <p>
+            검단 라이즈FC는 축구를 사랑하는 사람들이 모여
+            함께 도전하고 성장하는 지역 기반 아마추어 축구 구단입니다.
+          </p>
+
+          <p class="about-slogan">
+            WE RISE TOGETHER.
+          </p>
+
+        </div>
+
+        <div class="about-images">
+
+          <img
+            src="images/라이즈FC 선수단 단체사진.png"
+            alt="라이즈FC 선수단 단체사진"
+          >
+
+          <img
+            src="images/라이즈FC 엠블럼.png"
+            alt="라이즈FC 엠블럼"
+          >
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SQUAD -->
+    <section class="squad section" id="squad">
+
+      <p class="section-label">02 / THE TEAM</p>
+
+      <h2>OUR SQUAD</h2>
+
+      <p>함께 뛰는 사람들, 검단 라이즈FC 선수단</p>
+
+      <div class="squad-filters">
+
+        <button class="filter-btn active" data-position="ALL">ALL</button>
+        <button class="filter-btn" data-position="GK">GK</button>
+        <button class="filter-btn" data-position="DF">DF</button>
+        <button class="filter-btn" data-position="MF">MF</button>
+        <button class="filter-btn" data-position="FW">FW</button>
+
+      </div>
+
+      <div class="player-grid" id="player-grid"></div>
+
+      <!-- PLAYER MODAL -->
+      <div class="player-modal" id="player-modal">
+
+        <div class="modal-content">
+
+          <button class="modal-close" id="modal-close">×</button>
+
+          <div class="modal-number" id="modal-number">00</div>
+
+          <p class="section-label">GEOMDAN RISE FC</p>
+
+          <h3 id="modal-name">PLAYER NAME</h3>
+
+          <p id="modal-position">MIDFIELDER</p>
+
+          <p id="modal-description">선수 소개</p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- MATCHES -->
+    <section class="matches section" id="matches">
+
+      <p class="section-label">03 / 경기일정</p>
+
+      <div class="match-heading">
+        <div>
+          <h2>다가오는 경기</h2>
+          <p>검단 라이즈FC의 경기 일정과 결과를 확인하세요.</p>
+        </div>
+
+        <span class="match-season">2026 시즌</span>
+      </div>
+
+      <!-- 대표 경기 -->
+      <div class="match-box">
+
+        <div>
+          <strong>RISE FC</strong>
+          <span>검단 라이즈FC</span>
+        </div>
+
+        <b>VS</b>
+
+        <div>
+          <strong>상대팀</strong>
+          <span>상대 구단</span>
+        </div>
+
+      </div>
+
+      <!-- 경기 목록 -->
+      <div class="match-list" id="match-list">
+
+        <div class="match-empty">
+          등록된 경기 일정이 없습니다.
+        </div>
+
+      </div>
+
+      <div class="match-more-wrap">
+
+        <a href="matches.html" class="match-more-btn">
+          경기 일정 더보기 <span>↗</span>
+        </a>
+
+      </div>
+
+    </section>
+
+    <!-- CLUB NEWS -->
+    <section class="news section" id="news">
+
+      <p class="section-label">04 / CLUB NEWS</p>
+
+      <h2>RISE NEWS</h2>
+
+      <p>라이즈FC의 새로운 소식과 경기 이야기를 만나보세요.</p>
+
+      <div class="news-gallery">
+
+        <!-- OFFICIAL UNIFORM -->
+        <div class="news-card">
+
+          <img
+            src="images/검단 라이즈FC 공식 유니폼.jpg"
+            alt="검단 라이즈FC 공식 유니폼"
+          >
+
+          <div class="news-info">
+            <span>OFFICIAL KIT</span>
+            <h3>OUR IDENTITY</h3>
+            <p>검단 라이즈FC 공식 유니폼</p>
+          </div>
+
+        </div>
+
+        <!-- PARTNERS -->
+        <div class="news-card sponsor-card">
+
+          <img
+            src="images/라이즈FC와 함께하는 파트너.png"
+            alt="라이즈FC와 함께하는 파트너"
+          >
+
+          <div class="news-info">
+            <span>OUR PARTNERS</span>
+            <h3>WITH OUR PARTNERS</h3>
+            <p>라이즈FC와 함께하는 파트너</p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+<!-- ========================================
+     RISE FC NOTICE
+======================================== -->
+
+<section class="rise-notices section" id="notices">
+
+  <p class="section-label">05 / OFFICIAL NOTICE</p>
+
+  <h2>NOTICE</h2>
+
+  <p>검단 라이즈FC의 공식 공지사항을 확인하세요.</p>
+
+  <div id="notice-admin-tools"></div>
+
+  <div id="notice-list">
+    <div class="notice-loading">
+      공지사항을 불러오는 중입니다.
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ========================================
+     RISE FC PHOTO GALLERY
+======================================== -->
+
+<section class="rise-gallery section" id="gallery">
+
+  <p class="section-label">06 / CLUB GALLERY</p>
+
+  <h2>PHOTO GALLERY</h2>
+
+  <p>검단 라이즈FC의 순간들을 사진으로 만나보세요.</p>
+
+  <div id="gallery-admin-tools"></div>
+
+  <div class="gallery-grid" id="gallery-grid">
+    <div class="notice-loading">
+      사진을 불러오는 중입니다.
+    </div>
+  </div>
+
+</section>
+
+
+<!-- PHOTO VIEWER -->
+
+<div class="gallery-viewer" id="gallery-viewer">
+
+  <button type="button" id="gallery-viewer-close">×</button>
+
+  <img id="gallery-viewer-image" src="" alt="라이즈FC 갤러리 사진">
+
+</div>
+
+    <!-- CONTACT -->
+    <section class="contact section" id="contact">
+
+      <p class="section-label">05 / JOIN THE CLUB</p>
+
+      <h2>
+        BE PART OF<br>
+        THE RISE.
+      </h2>
+
+      <p>
+        검단 라이즈FC와 함께할 새로운 선수를 기다립니다.
+      </p>
+
+      
+<div class="contact-links">
+
+  <!-- KAKAO -->
+  <a href="https://open.kakao.com/o/sUgNwSWi"
+     target="_blank" rel="noopener noreferrer">
+
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <path fill="#FEE500" d="M24 5C12.4 5 3 12.4 3 21.5c0 5.8 3.8 10.9 9.5 13.8l-2.1 8 10-5.3c1.2.2 2.4.3 3.6.3 11.6 0 21-7.4 21-16.5S35.6 5 24 5Z"/>
+      <text x="24" y="25" font-size="10" font-weight="bold" text-anchor="middle" fill="#191919">TALK</text>
+    </svg>
+
+    <span>카카오톡 오픈채팅 문의</span>
+  </a>
+
+  <!-- SMS -->
+  <a href="sms:01077666848">
+
+    <svg viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/>
+    </svg>
+
+    <span>문자 문의</span>
+  </a>
+
+  <!-- INSTAGRAM -->
+  <a href="https://www.instagram.com/geomdan_fc/"
+     target="_blank" rel="noopener noreferrer">
+
+    <svg viewBox="0 0 24 24" fill="none"
+         stroke="#E4405F" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="18" cy="6" r="1" fill="#E4405F"/>
+    </svg>
+
+    <span>인스타그램</span>
+  </a>
+
+  <!-- YOUTUBE -->
+  <a href="https://youtube.com/channel/UCL5qBQb0qTxsuuF1A3P1LIA"
+     target="_blank" rel="noopener noreferrer">
+
+    <svg viewBox="0 0 24 24" fill="#FF0000">
+      <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8ZM9.6 15.6V8.4l6.2 3.6-6.2 3.6Z"/>
+    </svg>
+
+    <span>유튜브</span>
+  </a>
+
+</div>
+
+    </section>
+
+  </main>
+
+  <!-- AUTH MODAL -->
+  <div class="auth-modal" id="auth-modal">
+
+    <div class="auth-box">
+
+      <button class="auth-close" id="auth-close">×</button>
+
+      <h2 id="auth-title">RISE FC LOGIN</h2>
+
+      <div class="auth-tabs">
+        <button class="active" id="login-tab">로그인</button>
+        <button id="signup-tab">회원가입</button>
+      </div>
+
+      <form id="auth-form">
+
+        <input
+          type="text"
+          id="auth-name"
+          placeholder="이름"
+          class="hidden"
+        >
+
+        <input
+          type="email"
+          id="auth-email"
+          placeholder="이메일"
+          required
+        >
+
+        <input
+          type="password"
+          id="auth-password"
+          placeholder="비밀번호"
+          required
+        >
+
+        <button type="submit" id="auth-submit">
+          로그인
+        </button>
+
+      </form>
+
+      <p id="auth-message"></p>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+
+    <strong>GEOMDAN RISE FC</strong>
+
+    <p>RISE TOGETHER. · © 2026 RISE FC</p>
+
+    <div class="footer-socials">
+
+      <a
+        href="https://open.kakao.com/o/sUgNwSWi"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        KAKAO
+      </a>
+
+      <a
+        href="sms:01077666848"
+      >
+        SMS
+      </a>
+
+      <a
+        href="https://www.instagram.com/geomdan_fc/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        INSTAGRAM
+      </a>
+
+      <a
+        href="https://youtube.com/channel/UCL5qBQb0qTxsuuF1A3P1LIA?si=WuVdISK9ibXLaq_3"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        YOUTUBE
+      </a>
+
+    </div>
+
+  </footer>
+
+  <!-- MOBILE FIXED CONTACT -->
+  <div class="mobile-contact-bar">
+
+    <a
+      href="https://open.kakao.com/o/sUgNwSWi"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="kakao-mobile"
+    >
+      카카오톡 문의
+    </a>
+
+    <a href="sms:01077666848">
+      문자 문의
+    </a>
+
+  </div>
+
+  <!-- JAVASCRIPT -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+
+</div>
+<button
+  id="topButton"
+  aria-label="맨 위로 이동"
+  onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+>
+  TOP ↑
+</button>
+</body>
+</html>
